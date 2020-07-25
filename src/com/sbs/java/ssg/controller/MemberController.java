@@ -13,8 +13,7 @@ public class MemberController extends Controller {
 	private List<Member> members;
 	private String command;
 	private String actionMethodName;
-	private Member loginedMember;
-
+	
 	public MemberController(Scanner sc) {
 		this.sc = sc;
 
@@ -41,10 +40,6 @@ public class MemberController extends Controller {
 		}
 	}
 	
-	private boolean isLogined() {
-		return loginedMember != null;
-	}
-
 	private void doLogout() {
 		if ( isLogined() == false ) {
 			System.out.println("로그인 상태가 아닙니다.");
@@ -163,7 +158,7 @@ public class MemberController extends Controller {
 		System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
 
 		members.add(new Member(1, Util.getNowDateStr(), "admin", "admin", "관리자"));
-		members.add(new Member(1, Util.getNowDateStr(), "user1", "user1", "유저1"));
+		members.add(new Member(2, Util.getNowDateStr(), "user1", "user1", "유저1"));
 		members.add(new Member(3, Util.getNowDateStr(), "user2", "user2", "유저2"));
 	}
 }
