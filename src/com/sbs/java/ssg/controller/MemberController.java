@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.sbs.java.ssg.dto.Article;
 import com.sbs.java.ssg.dto.Member;
 import com.sbs.java.ssg.util.Util;
 
@@ -54,7 +55,7 @@ public class MemberController extends Controller {
 			System.out.println("비밀번호를 확인해주세요.");
 			return;
 		}
-		
+
 		loginedMember = member;
 		System.out.printf("로그인 성공! %s님 환영합니다.\n", loginedMember.name);
 	}
@@ -136,4 +137,11 @@ public class MemberController extends Controller {
 		System.out.printf("%d번 회원이 생성되었습니다. 환영합니다.\n", id);
 	}
 
+	public void makeTestData() {
+		System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
+
+		members.add(new Member(1, Util.getNowDateStr(), "admin", "admin", "관리자"));
+		members.add(new Member(1, Util.getNowDateStr(), "user1", "user1", "유저1"));
+		members.add(new Member(3, Util.getNowDateStr(), "user2", "user2", "유저2"));
+	}
 }
