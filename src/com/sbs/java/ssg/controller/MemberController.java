@@ -1,24 +1,21 @@
 package com.sbs.java.ssg.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import com.sbs.java.ssg.container.Container;
-import com.sbs.java.ssg.dto.Article;
 import com.sbs.java.ssg.dto.Member;
+import com.sbs.java.ssg.service.MemberService;
 import com.sbs.java.ssg.util.Util;
 
 public class MemberController extends Controller {
 	private Scanner sc;
-	private List<Member> members;
 	private String command;
 	private String actionMethodName;
-	
+	private MemberService memberService;
+
 	public MemberController(Scanner sc) {
 		this.sc = sc;
-
-		members = Container.memberDao.members;
+		memberService = Container.memberService;
 	}
 
 	public void doAction(String command, String actionMethodName) {
@@ -40,7 +37,7 @@ public class MemberController extends Controller {
 			break;
 		}
 	}
-	
+
 	private void doLogout() {
 		loginedMember = null;
 		System.out.println("로그아웃 되었습니다.");
@@ -52,7 +49,7 @@ public class MemberController extends Controller {
 		System.out.printf("로그인 비번 : ");
 		String loginPw = sc.nextLine();
 
-		Member member = getMemberByLoginId(loginId);
+		Member member = memberService.getMemberByLoginId(loginId);
 
 		if (member == null) {
 			System.out.println("해당회원은 존재하지 않습니다.");
@@ -68,31 +65,8 @@ public class MemberController extends Controller {
 		System.out.printf("로그인 성공! %s님 환영합니다.\n", loginedMember.name);
 	}
 
-	private Member getMemberByLoginId(String loginId) {
-		int index = getMemberIndexByLoginId(loginId);
-
-		if (index == -1) {
-			return null;
-		}
-
-		return members.get(index);
-	}
-
-	private int getMemberIndexByLoginId(String loginId) {
-		int i = 0;
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
-				return i;
-			}
-
-			i++;
-		}
-
-		return -1;
-	}
-
 	private boolean isJoinableLoginId(String loginId) {
-		int index = getMemberIndexByLoginId(loginId);
+		int index = memberService.getMemberIndexByLoginId(loginId);
 
 		if (index == -1) {
 			return true;
@@ -140,16 +114,19 @@ public class MemberController extends Controller {
 		String name = sc.nextLine();
 
 		Member member = new Member(id, regDate, loginId, loginPw, name);
-		Container.memberDao.add(member);
-		
+		memberService.join(member);
+
 		System.out.printf("%d번 회원이 생성되었습니다. 환영합니다.\n", id);
 	}
 
 	public void makeTestData() {
 		System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
 
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "admin", "admin", "관리자"));
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "user1", "user1", "홍길동"));
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "user2", "user2", "홍길순"));
+		Container.memberDao
+				.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "admin", "admin", "관리자"));
+		Container.memberDao
+				.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "user1", "user1", "홍길동"));
+		Container.memberDao
+				.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "user2", "user2", "홍길순"));
 	}
 }
